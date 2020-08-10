@@ -639,11 +639,6 @@
 			label = "dfps_data_region";
 		};
 
-		disp_rdump_memory: disp_rdump_region@9c000000 {
-			reg = <0x0 0x9c000000 0x0 0x01700000>;
-			label = "disp_rdump_region";
-		};
-
 		adsp_mem: adsp_region {
 			compatible = "shared-dma-pool";
 			alloc-ranges = <0x0 0x00000000 0x0 0xffffffff>;
@@ -670,7 +665,7 @@
 	};
 
 	chosen {
-		bootargs = "rcupdate.rcu_expedited=1 rcu_nocbs=0-7";
+		bootargs = "rcu_nocbs=0-7 noirqdebug";
 	};
 
 	soc: soc { };
@@ -2282,7 +2277,7 @@
 
 				msm_cdsp_rm: qcom,msm_cdsp_rm {
 					compatible = "qcom,msm-cdsp-rm";
-					qcom,qos-latency-us = <44>;
+					qcom,qos-latency-us = <67>;
 					qcom,qos-maxhold-ms = <20>;
 					qcom,compute-cx-limit-en;
 					qcom,compute-priority-mode = <2>;
@@ -2931,8 +2926,8 @@
 		"MAX";
 
 		/* PM QoS */
-		qcom,pm-qos-cpu-groups = <0x3f 0xC0>;
-		qcom,pm-qos-cpu-group-latency-us = <67 67>;
+		qcom,pm-qos-cpu-groups = <0x1 0x2 0x4 0x8 0x10 0x20 0x40 0x80>;
+		qcom,pm-qos-cpu-group-latency-us = <67 67 67 67 67 67 67 67>;
 		qcom,pm-qos-default-cpu = <0>;
 
 		pinctrl-names = "dev-reset-assert", "dev-reset-deassert";
