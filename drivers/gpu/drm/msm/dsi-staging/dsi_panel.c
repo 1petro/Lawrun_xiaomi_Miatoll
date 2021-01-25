@@ -47,6 +47,10 @@
 static bool lcd_esd_irq_handler = false;
 extern void lcd_esd_enable(bool en);
 
+static unsigned int framerate_override=60;
+module_param(framerate_override, uint, 0444);
+
+
 enum dsi_dsc_ratio_type {
 	DSC_8BPC_8BPP,
 	DSC_10BPC_8BPP,
@@ -864,6 +868,12 @@ static int dsi_panel_parse_timing(struct dsi_mode_info *mode,
 	}
 
 	mode->clk_rate_hz = !rc ? tmp64 : 0;
+	if (tmp64 == 1100000000 || tmp64 == 1103000000) {
+		int clkrate = framerate_override * mode->clk_rate_hz  / 60;
+          if (framerate_override * mode->clk_rate_hz % 60 == 0) {
+          mode->clk_rate_hz  = clkrate;
+          }
+}    
 	display_mode->priv_info->clk_rate_hz = mode->clk_rate_hz;
 
 	rc = utils->read_u32(utils->data, "qcom,mdss-mdp-transfer-time-us",
@@ -903,6 +913,14 @@ static int dsi_panel_parse_timing(struct dsi_mode_info *mode,
 		       rc);
 		goto error;
 	}
+	
+	if (mode->refresh_rate == 60) {
+		mode->refresh_rate = framerate_override;
+	}
+
+	if (framerate_override)
+		mode->h_front_porch = 32;
+
 
 	rc = utils->read_u32(utils->data,
 				"qcom,mdss-dsi-h-back-porch",
@@ -912,6 +930,9 @@ static int dsi_panel_parse_timing(struct dsi_mode_info *mode,
 		       rc);
 		goto error;
 	}
+	
+	if (framerate_override)
+		mode->h_back_porch = 16;
 
 	rc = utils->read_u32(utils->data,
 				"qcom,mdss-dsi-h-pulse-width",
@@ -921,6 +942,9 @@ static int dsi_panel_parse_timing(struct dsi_mode_info *mode,
 		       rc);
 		goto error;
 	}
+	
+	if (framerate_override)
+		mode->h_sync_width = 16;
 
 	rc = utils->read_u32(utils->data, "qcom,mdss-dsi-h-sync-skew",
 				  &mode->h_skew);
@@ -946,6 +970,9 @@ static int dsi_panel_parse_timing(struct dsi_mode_info *mode,
 		       rc);
 		goto error;
 	}
+	
+	if (framerate_override)
+		mode->h_sync_width = 16;
 
 	rc = utils->read_u32(utils->data, "qcom,mdss-dsi-v-front-porch",
 				  &mode->v_front_porch);
@@ -954,6 +981,9 @@ static int dsi_panel_parse_timing(struct dsi_mode_info *mode,
 		       rc);
 		goto error;
 	}
+	
+	if (framerate_override)
+		mode->h_sync_width = 8;
 
 	rc = utils->read_u32(utils->data, "qcom,mdss-dsi-v-pulse-width",
 				  &mode->v_sync_width);
@@ -962,6 +992,10 @@ static int dsi_panel_parse_timing(struct dsi_mode_info *mode,
 		       rc);
 		goto error;
 	}
+	
+	if (framerate_override)
+		mode->h_sync_width = 8;
+	
 	pr_debug("panel vert active:%d front_portch:%d back_porch:%d pulse_width:%d\n",
 		mode->v_active, mode->v_front_porch, mode->v_back_porch,
 		mode->v_sync_width);
