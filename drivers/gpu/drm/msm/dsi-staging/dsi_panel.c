@@ -917,6 +917,7 @@ static int dsi_panel_parse_timing(struct dsi_mode_info *mode,
 	if (mode->refresh_rate == 60) {
 		mode->refresh_rate = framerate_override;
 	}
+	
 
 	if (framerate_override)
 		mode->h_front_porch = 32;
@@ -4102,6 +4103,12 @@ error_free_mem:
 exit:
 	return rc;
 }
+
+unsigned int dsi_panel_get_refresh_rate(void)
+{
+	return framerate_override;
+}
+
 
 int dsi_panel_send_qsync_on_dcs(struct dsi_panel *panel,
 		int ctrl_idx)
