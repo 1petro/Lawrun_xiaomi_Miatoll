@@ -1552,6 +1552,11 @@ source "lib/Kconfig"
 
 menu "Xiaomi configuration options"
 
+config XIAOMI_MIATOLL_MIUI
+        bool "Xiaomi Miui Support"
+        help
+          Support for Xiaomi Miui
+
 config MACH_XIAOMI
         bool "Xiaomi device"
         depends on ARCH_QCOM

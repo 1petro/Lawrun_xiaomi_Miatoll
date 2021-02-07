@@ -15,7 +15,11 @@ dts-dirs += hisilicon
 dts-dirs += marvell
 dts-dirs += mediatek
 dts-dirs += nvidia
+ifdef CONFIG_XIAOMI_MIATOLL_MIUI
+dts-dirs += Xiaomi-Miatoll
+else
 dts-dirs += qcom
+endif
 dts-dirs += realtek
 dts-dirs += renesas
 dts-dirs += rockchip
