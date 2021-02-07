@@ -206,11 +206,11 @@ echo -ne "\n(i) Make your choice[1-2]: "
 read Pl
 if [ "$Pl" == "1" ]; then
 make CC="ccache $Cc" O=$out dtbs $THREAD
-./build.sh 
 fi
 if [ "$Pl" == "2" ]; then
 echo "Making DTBO"
-python /root/libufdt/utils/src/mkdtboimg.py create $Kernel_Work/dtbo.img $KER_DIR/$out/arch/arm64/boot/dts/qcom/*.dtbo
+make CC="ccache $Cc" O=$out dtbo.img $THREAD | tee kernel.log
+#python /root/libufdt/utils/src/mkdtboimg.py create $Kernel_Work/dtbo.img $KER_DIR/$out/arch/arm64/boot/dts/qcom/*.dtbo
 sleep 2
 ./build.sh
 fi
